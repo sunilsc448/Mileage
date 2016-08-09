@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.inmobi.ads"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorWhite"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.MainActivity">
+
+    <Spinner
+        android:id="@+id/vehicleSpinner"
+        style="@style/spinner_style" />
+
+    <com.example.android.mileage.Utilities.CustomTextView
+        android:id="@+id/noItemsTxt"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="@string/msg_no_items"
+        android:textColor="@color/colorBlack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/vehicleSpinner"
+        android:id="@+id/recylerViewPhotoProducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+
+    <com.inmobi.ads.InMobiBanner
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/banner"
+        ads:refreshInterval="60"
+        ads:placementId="1469048772162" />
+
+</RelativeLayout>

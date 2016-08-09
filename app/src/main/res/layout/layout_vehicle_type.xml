@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_marginStart="12dp"
+        android:id="@+id/vehicleNameAndNo"
+        android:layout_weight="7"
+        android:layout_width="0dp"
+        android:singleLine="true"
+        android:gravity="center_vertical"
+        android:layout_height="55dp"
+        android:text="Ka 17 Ek 212"
+        android:textColor="@android:color/black"
+        android:textSize="18dp" />
+
+    <LinearLayout
+        android:layout_gravity="center_vertical"
+        android:gravity="right"
+        android:layout_marginRight="12dp"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@drawable/v0"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/vehicleTypeImg"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <ImageView
+            android:id="@+id/deleteVehicleBtn"
+            android:paddingStart="6dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/delete_icon_new"
+            android:layout_width="30dp"
+            android:layout_height="20dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.inmobi.ads"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.android.mileage.Activities.GraphActivity">
+
+    <Spinner
+        android:id="@+id/vehicleSpinner"
+        style="@style/spinner_style" />
+
+    <android.support.design.widget.TabLayout
+        android:layout_below="@+id/vehicleSpinner"
+        android:id="@+id/tabLyt"
+        app:tabBackground="@android:color/transparent"
+        app:tabMode="fixed"
+        app:tabIndicatorColor="@color/menubg"
+        app:tabSelectedTextColor="@color/colorBlack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabTextColor="@color/colorGray"
+        app:tabGravity="fill"/>
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewPagerLyt"
+        android:layout_below="@id/tabLyt" />
+
+    <com.inmobi.ads.InMobiBanner
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/banner"
+        ads:refreshInterval="60"
+        ads:placementId="1469048772162" />
+
+</RelativeLayout>

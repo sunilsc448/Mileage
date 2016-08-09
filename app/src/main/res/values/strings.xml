@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Mileage Tracker</string>
+
+    <string name="amount_of_petrol_filled">Amount of fuel filled (\u20B9)</string>
+    <string name="msg_no_items">Start tracking your Mileage!</string>
+    <string name="current_meter_reading">Current Meter Reading (kms)</string>
+    <string name="last_meter_reading">Last Meter Reading (kms)</string>
+    <string name="petrol_price_per_litre">Fuel Price per Litre (\u20B9)</string>
+    <string name="petrol_filled_in_litres">Fuel Filled (ltrs)</string>
+    <string name="petrol_filled_date">Fuel filled Date</string>
+    <string name="petrol_ended_date">Fuel ended Date</string>
+    <string name="action_save">Save</string>
+    <string name="mileage">Mileage</string>
+    <string name="current_should_greater_than_previous">Current Meter reading should be greater than Previous</string>
+    <string name="msg_enter_the_details_fully_or_calculate_mileage_and_save">Enter the details fully, Calculate Mileage and then Save</string>
+    <string name="mileage_is">Mileage :&#160;</string>
+    <string name="kms">&#160;kms</string>
+    <string name="dash_marks">- - - -</string>
+    <string name="msg_enter_the_details_fully">Enter the details fully</string>
+    <string name="msg_vehicle_already_exist">Vehicle already exist</string>
+    <string name="rs">\u20B9</string>
+    <string name="kms_per_ltr">&#160;kms/ltr</string>
+    <string name="ltrs">ltrs</string>
+    <string name="amount_spent_per_month">Amount of rupees spent per month</string>
+    <string name="amount_of_fuel_filled">Amount of fuel filled</string>
+    <string name="vehicle_name">Vehicle Name</string>
+    <string name="vehicle_reg_no">Vehicle Registration Number</string>
+    <string name="add_new_vehicle">Add new vehicle</string>
+    <string name="add_new_vehicle_item_id">10dummy01</string>
+    <string name="map_spinner_title">Select Your Place Type</string>
+    <string name="mas_no_map_permission">Please Enable Location Permission to use this facility</string>
+    <string-array name="placesTypeArray">
+        <item>GAS STATION</item>
+        <item>ATM</item>
+        <item>CAFE</item>
+        <item>FIRE STATION</item>
+        <item>HOSPITAL</item>
+        <item>PHARMACY</item>
+        <item>POLICE</item>
+    </string-array>
+</resources>

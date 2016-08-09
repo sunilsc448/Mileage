@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.inmobi.ads"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.mileage.Activities.MapActivity">
+
+    <LinearLayout
+        android:layout_above="@+id/banner"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/placesTypeArray"
+            android:prompt="@string/map_spinner_title"
+            android:minHeight="20dp"
+            android:id="@+id/mySpinner" />
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.MapFragment"/>
+    </LinearLayout>
+
+    <com.inmobi.ads.InMobiBanner
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/banner"
+        ads:refreshInterval="60"
+        ads:placementId="1469048772162" />
+
+</RelativeLayout>
