@@ -263,16 +263,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         alertDialog.show();
     }
 
-    public void stopUsingGPS() {
-        if (locationManager != null) {
-            try {
-                locationManager.removeUpdates((LocationListener) this);
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void onLocationChanged(Location location) {
 
@@ -317,9 +307,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 .fromResource(R.drawable.mapmarker))
                         .snippet(result.get(i).getVicinity()));
             }
+
+            mMap.addMarker(new MarkerOptions()
+                    .title("I am here")
+                    .position(new LatLng(latitude, longitude))
+                    .icon(BitmapDescriptorFactory
+                            .fromResource(R.drawable.map_person))
+                    .snippet("Select any Markers to Navigate"));
+
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(result.get(0).getLatitude(), result
-                            .get(0).getLongitude())) // Sets the center of the map to
+                    .target(new LatLng(latitude, longitude)) // Sets the center of the map to
                     // Mountain View
                     .zoom(14) // Sets the zoom
                     .tilt(30) // Sets the tilt of the camera to 30 degrees
