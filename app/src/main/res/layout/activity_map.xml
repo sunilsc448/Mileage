@@ -4,7 +4,7 @@
     xmlns:ads="http://schemas.android.com/apk/lib/com.inmobi.ads"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.mileage.Activities.MapActivity">
+    tools:context="com.fuel.mileage.Activities.MapActivity">
 
     <LinearLayout
         android:layout_above="@+id/banner"

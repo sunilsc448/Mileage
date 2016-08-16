@@ -11,7 +11,7 @@
         android:id="@+id/vehicleSpinner"
         style="@style/spinner_style" />
 
-    <com.example.android.mileage.Utilities.CustomTextView
+    <com.fuel.mileage.Utilities.CustomTextView
         android:id="@+id/noItemsTxt"
         android:gravity="center"
         android:textSize="20sp"

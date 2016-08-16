@@ -64,7 +64,7 @@
                     android:layout_marginTop="6dp"
                     android:orientation="vertical">
 
-                    <com.example.android.mileage.Utilities.CustomTextView
+                    <com.fuel.mileage.Utilities.CustomTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
@@ -90,7 +90,7 @@
                     android:layout_marginTop="6dp"
                     android:orientation="vertical">
 
-                    <com.example.android.mileage.Utilities.CustomTextView
+                    <com.fuel.mileage.Utilities.CustomTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="6dp"
@@ -122,7 +122,7 @@
                         android:layout_weight="2.9"
                         android:orientation="vertical">
 
-                        <com.example.android.mileage.Utilities.CustomTextView
+                        <com.fuel.mileage.Utilities.CustomTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
@@ -182,7 +182,7 @@
                         android:layout_weight="3"
                         android:orientation="vertical">
 
-                        <com.example.android.mileage.Utilities.CustomTextView
+                        <com.fuel.mileage.Utilities.CustomTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
@@ -207,7 +207,7 @@
                         android:layout_weight="2"
                         android:orientation="vertical">
 
-                        <com.example.android.mileage.Utilities.CustomTextView
+                        <com.fuel.mileage.Utilities.CustomTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
@@ -243,7 +243,7 @@
                         android:layout_weight="3"
                         android:orientation="vertical">
 
-                        <com.example.android.mileage.Utilities.CustomTextView
+                        <com.fuel.mileage.Utilities.CustomTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
@@ -268,7 +268,7 @@
                         android:layout_weight="2"
                         android:orientation="vertical">
 
-                        <com.example.android.mileage.Utilities.CustomTextView
+                        <com.fuel.mileage.Utilities.CustomTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
@@ -309,7 +309,7 @@
                     android:orientation="vertical"
                     android:visibility="invisible">
 
-                    <com.example.android.mileage.Utilities.CustomTextView
+                    <com.fuel.mileage.Utilities.CustomTextView
                         android:id="@+id/mileageResult"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
