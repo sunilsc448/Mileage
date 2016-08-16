@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:entries="@array/placesTypeArray"
             android:prompt="@string/map_spinner_title"
-            android:minHeight="20dp"
+            android:minHeight="50dp"
             android:id="@+id/mySpinner" />
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/map"

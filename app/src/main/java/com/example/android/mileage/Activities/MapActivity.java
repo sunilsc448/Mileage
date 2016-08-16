@@ -1,21 +1,32 @@
 package com.example.android.mileage.Activities;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.android.mileage.Models.Place;
 import com.example.android.mileage.Models.PlacesService;
 import com.example.android.mileage.R;
 import com.example.android.mileage.Utilities.Extras;
-import com.example.android.mileage.Utilities.GPSTracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -28,14 +39,35 @@ import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     private Spinner myspinner;
     private String[] places;
-    private double latitude, longitude;
+    private String selectedPlaceType;
     private final String TAG = getClass().getSimpleName();
+    private final int interval = 1000; // 1 Second
+    private Timer refreshTimer;
+
+    //For location updates
+    boolean isGPSEnabled = false;
+    // flag for network status
+    boolean isNetworkEnabled = false;
+    // flag for GPS status
+    boolean canGetLocation = false;
+    Location location; // location
+    private double latitude; // latitude
+    private double longitude; // longitude
+
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
+    // Declaring a Location Manager
+    protected LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,51 +79,73 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         banner.load();
 
         places = getResources().getStringArray(R.array.placesTypeArray);
+        refreshTimer = new Timer();
 
-        initCompo();
+        if (Extras.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, getApplicationContext(), MapActivity.this)) {
+            if (isNetworkConnected()) {
+                initCompo();
+            } else {
+                Toast.makeText(getApplicationContext(), "Not connected to internet. Please check the connection and come back", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, Extras.PERMISSION_REQUEST_CODE_GPS_SETTINGS, getApplicationContext(), MapActivity.this);
+        }
 
-        gpsFunction();
-
+        places = getResources().getStringArray(R.array.placesTypeArray);
+        selectedPlaceType = places[0].toLowerCase().replace(" ", "_");
         myspinner = (Spinner) findViewById(R.id.mySpinner);
         myspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(latitude != 0) {
-                    String selectedPlaceType = adapterView.getItemAtPosition(i).toString().toLowerCase().replace(" ", "_");
+                selectedPlaceType = adapterView.getItemAtPosition(i).toString().toLowerCase().replace(" ", "_");
+                if (isNetworkConnected()) {
                     mMap.clear();
-                    new GetPlaces(MapActivity.this, selectedPlaceType).execute();
+                    getLocationAndRefreshMarkers();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Not connected to internet. Please check the connection and come back", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    public void requestPermission(String strPermission, int perCode, Context _c, Activity _a) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(_a, strPermission)) {
+            Toast.makeText(getApplicationContext(), "GPS permission allows us to access location data. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(_a, new String[]{strPermission}, perCode);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(latitude == 0)
-            gpsFunction();
-    }
-
-    private void gpsFunction() {
-        GPSTracker gps = new GPSTracker(this);
-        // gps enabled} // return boolean true/false
-        if(gps.canGetLocation())
-        {
-            if(latitude != 0) {
-                latitude = gps.getLatitude(); // returns latitude
-                longitude = gps.getLongitude(); // returns longitude
-                new GetPlaces(this,places[0].toLowerCase().replace(" ", "_")).execute();
-            }
-        }else{
-            gps.showSettingsAlert();
+        switch (requestCode) {
+            case Extras.PERMISSION_REQUEST_CODE_GPS_SETTINGS:
+                refreshTimerToFetchGPS();
+                break;
         }
     }
 
-    private void initCompo() {
+    private void refreshTimerToFetchGPS() {
+        refreshTimer = new Timer();
+        refreshTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getLocationAndRefreshMarkers();
+            }
+        }, 1000);
+    }
 
+    private void initCompo() {
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -107,8 +161,139 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map.getUiSettings().setZoomControlsEnabled(true);
     }
 
-    private class GetPlaces extends AsyncTask<Void, Void,ArrayList<Place>>
-    {
+    public void getLocationAndRefreshMarkers() {
+        refreshTimer.cancel();
+        try {
+            locationManager = (LocationManager) this
+                    .getSystemService(LOCATION_SERVICE);
+
+            // getting GPS status
+            isGPSEnabled = locationManager
+                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+            // getting network status
+            isNetworkEnabled = locationManager
+                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (isGPSEnabled && isNetworkEnabled) {
+                        if (isNetworkEnabled) {
+                            if (ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                return;
+                            }
+                            locationManager.requestLocationUpdates(
+                                    LocationManager.NETWORK_PROVIDER,
+                                    MIN_TIME_BW_UPDATES,
+                                    MIN_DISTANCE_CHANGE_FOR_UPDATES, (LocationListener) MapActivity.this);
+                            //Log.d("Network", "Network");
+                            if (locationManager != null) {
+                                location = locationManager
+                                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                                if (location != null) {
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
+                                }
+                            }
+                        }
+                        // if GPS Enabled get lat/long using GPS Services
+                        if (isGPSEnabled) {
+                            if (location == null) {
+                                locationManager.requestLocationUpdates(
+                                        LocationManager.GPS_PROVIDER,
+                                        MIN_TIME_BW_UPDATES,
+                                        MIN_DISTANCE_CHANGE_FOR_UPDATES, (LocationListener) MapActivity.this);
+                                //Log.d("GPS Enabled", "GPS Enabled");
+                                if (locationManager != null) {
+                                    location = locationManager
+                                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                    if (location != null) {
+                                        latitude = location.getLatitude();
+                                        longitude = location.getLongitude();
+                                    }
+                                }
+                            }
+                        }
+                        new GetPlaces(MapActivity.this, selectedPlaceType).execute();
+                    }
+                    else {
+                        showSettingsAlert();
+                    }
+                }});
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("GPS is settings");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                MapActivity.this.startActivityForResult(intent,Extras.PERMISSION_REQUEST_CODE_GPS_SETTINGS);
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
+    public void stopUsingGPS() {
+        if (locationManager != null) {
+            try {
+                locationManager.removeUpdates((LocationListener) this);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+    private class GetPlaces extends AsyncTask<Void, Void, ArrayList<Place>> {
         private ProgressDialog dialog;
         private Context context;
         private String places;
@@ -121,7 +306,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         @Override
         protected void onPostExecute(ArrayList<Place> result) {
             super.onPostExecute(result);
-           if (dialog.isShowing()) {
+            if (dialog.isShowing()) {
                 dialog.dismiss();
             }
             for (int i = 0; i < result.size(); i++) {
@@ -157,7 +342,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         @Override
         protected ArrayList<Place> doInBackground(Void... arg0) {
             PlacesService service = new PlacesService(Extras.MAP_API_KEY);
-            ArrayList<Place> findPlaces = service.findPlaces(latitude, longitude, places);
+            ArrayList<Place> findPlaces = service.findPlaces(latitude, longitude, selectedPlaceType);
 
             for (int i = 0; i < findPlaces.size(); i++) {
 
@@ -167,4 +352,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return findPlaces;
         }
     }
-}
+};

@@ -1,6 +1,9 @@
 package com.example.android.mileage.Utilities;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +30,9 @@ public class Extras {
     public static final long Ads_PLACEMENT_ID = 1469048772162L;
     public static final String MAP_API_KEY = "AIzaSyCAitSkMY_koWNH_jhFAWR9RgVkwQ_WgpI";
     public static final String ADS_API_ID = "a9cd59f0b0de49ea8f315504a7a46709";
+    public static final int PERMISSION_REQUEST_CODE_LOCATION = 1;
+    public static final int PERMISSION_REQUEST_CODE_GPS_SETTINGS = 2;
+
 
     public static Extras getExtraClassObj() {
         if (extraClassObj == null)
@@ -80,5 +86,12 @@ public class Extras {
         return id;
     }
 
-
+    public static boolean checkPermission(String strPermission, Context _c, Activity _a) {
+        int result = ContextCompat.checkSelfPermission(_c, strPermission);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -34,7 +34,6 @@ public class PlacesService {
 
         String urlString = makeUrl(latitude, longitude, placeSpacification);
         Log.v("Places URL ", "" + urlString);
-        Log.v("Places URL ", "" + urlString);
         try {
             String json = getJSON(urlString);
 
