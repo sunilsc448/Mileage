@@ -3,7 +3,9 @@ package com.fuel.mileage;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.support.multidex.MultiDex;
 
 import com.fuel.mileage.Utilities.Extras;
 
@@ -32,5 +34,11 @@ public class App extends Application
         cal.add(Calendar.DATE, 4);
 
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 4 * 86400000, pendingIntent);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

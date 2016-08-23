@@ -1,5 +1,6 @@
 package com.fuel.mileage.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -72,7 +73,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                     vehicleItem.setVehicleType(vehicleType);
 
                     db.createVehicleItem(vehicleItem);
-
+                    startActivity(new Intent(AddVehicleActivity.this,MainActivity.class));
                     finish();
                 }else{
                     Toast.makeText(AddVehicleActivity.this, getResources().getString(R.string.msg_enter_the_details_fully), Toast.LENGTH_LONG).show();

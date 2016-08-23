@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements AdapterToActivity
                         displayMlgItemsBasedOnId(vehicleItem.getVehicleId());
                     }else{
                         startActivity(new Intent(MainActivity.this, AddVehicleActivity.class));
+                        finish();
                         setVehicleSpinnerSelection();
                     }
             }
