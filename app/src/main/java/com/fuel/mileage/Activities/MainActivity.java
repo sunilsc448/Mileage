@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements AdapterToActivity
         InMobiSdk.init(this, Extras.ADS_API_ID);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         InMobiBanner banner = (InMobiBanner) findViewById(R.id.banner);
         banner.load();
 
